@@ -1,3 +1,8 @@
+/*
+This code is an extension of capacitiveTouch.ino but instead of all LEDs being connected to one pin on the Arduino Uno, the LEDs in each 
+individual mushroom are connected to their own pin. This allows us to manipulate the code so that each mushroom will be a different color. 
+*/
+
 //touch sensor
 #include <Wire.h>
 #include "Adafruit_MPR121.h"
@@ -14,17 +19,16 @@
 #endif
 
 //lights
-#define PIN_NEO_PIXEL  6
-#define PIN_NEO_PIXEL2 8
-#define PIN_NEO_PIXEL3 10
+#define PIN_NEO_PIXEL  6 // Mushroom 1 is connected to pin 6 on the Arduino Uno
+#define PIN_NEO_PIXEL2 8 // Mushroom 2 is connected to pin 8 on the Arduino Uno
+#define PIN_NEO_PIXEL3 10 // Mushroom 3 is connected to pin 10 on the Arduino Uno
 
-#define NUM_PIXELS     12
-#define NUM_PIXELS2    25
-#define NUM_PIXELS3    12
+#define NUM_PIXELS     12 // 12 LEDs (pixels) in Mushroom 1
+#define NUM_PIXELS2    25 // 25 LEDs (pixels) in Mushroom 2
+#define NUM_PIXELS3    12 // 12 LEDs (pixels) in Mushroom 3
 
 int showType = 0;
 
-// You can have up to 4 on one i2c bus but one is enough for testing!
 Adafruit_MPR121 cap = Adafruit_MPR121();
 Adafruit_NeoPixel NeoPixel(NUM_PIXELS, PIN_NEO_PIXEL, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel NeoPixel2(NUM_PIXELS2, PIN_NEO_PIXEL2, NEO_GRB + NEO_KHZ800);
@@ -71,17 +75,13 @@ void loop() {
         startShow(i);
       }
     }
-    // if it *was* touched and now *isnt*, alert!
-    //if (!(currtouched & _BV(i)) && (lasttouched & _BV(i)) ) {
-      //Serial.print(i); Serial.println(" released");
-      //startShow(0);
-    //}
   }
   
   lasttouched = currtouched;
 
 }
 
+// Function to set neopixel color for Mushroom 1 
 void colorWipe(uint32_t c, uint8_t wait) {
   for(uint16_t i=0; i<NUM_PIXELS; i++) {
     NeoPixel.setPixelColor(i, c);
@@ -89,6 +89,7 @@ void colorWipe(uint32_t c, uint8_t wait) {
     delay(wait);
     }
   }
+// Function to set neopixel color for Mushroom 2
 void colorWipe2(uint32_t c, uint8_t wait) {
   for(uint16_t i=0; i<NUM_PIXELS2; i++) {
     NeoPixel2.setPixelColor(i, c);
@@ -96,6 +97,7 @@ void colorWipe2(uint32_t c, uint8_t wait) {
     delay(wait);
     }
   }
+// Function to set neopixel color for Mushroom 3
 void colorWipe3(uint32_t c, uint8_t wait) {
   for(uint16_t i=0; i<NUM_PIXELS3; i++) {
     NeoPixel3.setPixelColor(i, c);
@@ -104,6 +106,7 @@ void colorWipe3(uint32_t c, uint8_t wait) {
     }
   }
 
+// Each case represents a different light mode and the case number corresponds to the pins on the I2C touch sensor 
 void startShow(int i) {
   switch(i){
     
@@ -139,6 +142,7 @@ void startShow(int i) {
   }
   }
 
+  //Pulse through colors of rainbow
   void rainbow(uint8_t wait) {
   uint16_t i, j;
 
