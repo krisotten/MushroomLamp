@@ -1,3 +1,7 @@
+/*
+This code is for an Arduino Uno and incorporates capacitive touch using an I2C sensor to create 8 different light modes for the mushroom lamp.
+*/
+
 //touch sensor
 #include <Wire.h>
 #include "Adafruit_MPR121.h"
@@ -19,12 +23,10 @@
 
 int showType = 0;
 
-// You can have up to 4 on one i2c bus but one is enough for testing!
 Adafruit_MPR121 cap = Adafruit_MPR121();
 Adafruit_NeoPixel NeoPixel(NUM_PIXELS, PIN_NEO_PIXEL, NEO_GRB + NEO_KHZ800);
 
-// Keeps track of the last pins touched
-// so we know when buttons are 'released'
+// Keeps track of the last pins touched so we know when buttons are 'released'
 uint16_t lasttouched = 0;
 uint16_t currtouched = 0;
 
@@ -62,17 +64,13 @@ void loop() {
         startShow(i);
       }
     }
-    // if it *was* touched and now *isnt*, alert!
-    //if (!(currtouched & _BV(i)) && (lasttouched & _BV(i)) ) {
-      //Serial.print(i); Serial.println(" released");
-      //startShow(0);
-    //}
   }
   
   lasttouched = currtouched;
 
 }
 
+// Sets neopixels to given color
 void colorWipe(uint32_t c, uint8_t wait) {
   for(uint16_t i=0; i<NUM_PIXELS; i++) {
     NeoPixel.setPixelColor(i, c);
@@ -81,6 +79,7 @@ void colorWipe(uint32_t c, uint8_t wait) {
     }
   }
 
+// Each case represents a different light mode and the case number corresponds to the pins on the I2C touch sensor
 void startShow(int i) {
   switch(i){
     
@@ -104,6 +103,7 @@ void startShow(int i) {
   }
   }
 
+  //Pulse through colors of rainbow
   void rainbow(uint8_t wait) {
   uint16_t i, j;
 
